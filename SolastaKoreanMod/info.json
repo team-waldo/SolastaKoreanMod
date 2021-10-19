@@ -1,0 +1,10 @@
+﻿{
+  "Id": "SolastaKoreanFont",
+  "DisplayName": "KoreanMod",
+  "Author": "akintos",
+  "Version": "0.1.0",
+  "ManagerVersion": "0.23.4",
+  "Requirements": [],
+  "AssemblyName": "SolastaKoreanMod.dll",
+  "EntryMethod": "SolastaKoreanMod.ModMain.Load"
+}
