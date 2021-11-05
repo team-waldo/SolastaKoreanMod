@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <Configurations>Debug;Release;Debug Install;Release Install</Configurations>
+    <Version>1.1.0</Version>
   </PropertyGroup>
 
   <Target Name="CheckEnvironmentVars">

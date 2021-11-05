@@ -69,11 +69,26 @@ namespace SolastaKoreanMod
             languageSourceData.AddLanguage("한국어", "ko");
 
             int languageIndex = languageSourceData.GetLanguageIndex("한국어");
+            int translated = 0;
+            int removed = 0;
 
             foreach (var item in translationData.Strings)
             {
-                languageSourceData.GetTermData(item.Key).Languages[languageIndex] = item.Value;
+                var term = languageSourceData.GetTermData(item.Key);
+                if (term != null)
+                {
+                    term.Languages[languageIndex] = item.Value;
+                    translated++;
+                }
+                else
+                {
+                    removed++;
+                }
             }
+
+            int total = languageSourceData.mTerms.Count;
+            ModMain.Log($"Translated ({translated}/{total})");
+            ModMain.Log($"{removed} terms removed");
 
             Log("Added Korean language.");
             TranslationLoaded = true;

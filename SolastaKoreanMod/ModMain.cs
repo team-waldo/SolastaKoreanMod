@@ -40,17 +40,15 @@ namespace SolastaKoreanMod
 
                 var harmony = new Harmony(modEntry.Info.Id);
                 harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+                TranslationManager.Instance.Initialize(modEntry.Path);
+                ModMain.modEntry = modEntry;
             }
             catch (Exception ex)
             {
                 Error(ex);
                 throw;
             }
-            Logger = modEntry.Logger;
-            modEntry.OnGUI = OnGUI;
-
-            TranslationManager.Instance.Initialize(modEntry.Path);
-            ModMain.modEntry = modEntry;
         }
 
         static void OnGUI(UnityModManager.ModEntry modEntry)
