@@ -19,7 +19,20 @@ namespace SolastaKoreanMod
         public const string LANGUAGE_CODE = "ko";
         public const string LANGUAGE_NAME = "한국어";
 
-        private string TranslationFilePath() => Path.Combine(ModDirectory, TRANSLATION_FILENAME);
+        private string TranslationFilePath()
+        {
+            string defaultPath = Path.Combine(ModDirectory, TRANSLATION_FILENAME);
+
+            try
+            {
+                using (var file = File.OpenWrite(defaultPath)) { }
+                return defaultPath;
+            }
+            catch (UnauthorizedAccessException) { }
+
+            string altPath = Path.Combine(Path.GetTempPath(), TRANSLATION_FILENAME);
+            return altPath;
+        }
 
         public bool Initialized { get; private set; } = false;
         public bool TranslationLoaded { get; private set; } = false;
@@ -87,8 +100,8 @@ namespace SolastaKoreanMod
             }
 
             int total = languageSourceData.mTerms.Count;
-            ModMain.Log($"Translated ({translated}/{total})");
-            ModMain.Log($"{removed} terms removed");
+            Log($"Translated ({translated}/{total})");
+            Log($"{removed} terms removed");
 
             Log("Added Korean language.");
             TranslationLoaded = true;
@@ -121,8 +134,15 @@ namespace SolastaKoreanMod
             var newData = githubClient.DoanloadAsset(release.assets[0]);
             if (!(newData is null))
             {
-                SaveTranslationCache(newData);
-                Log("Downloaded and saved translation data.");
+                try
+                {
+                    SaveTranslationCache(newData);
+                    Log("Downloaded and saved translation data.");
+                }
+                catch (Exception)
+                {
+                    Log("Failed to save translation data cache.");
+                }
             }
 
             return newData ?? cache;
