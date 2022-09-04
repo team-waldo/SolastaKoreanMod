@@ -81,21 +81,21 @@ namespace SolastaKoreanMod
                     fontBundle = UnityEngine.AssetBundle.LoadFromFile(bundlePath);
                 }
 
-                var allFonts = UnityEngine.Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
+                TMP_FontAsset[] allFonts = UnityEngine.Resources.FindObjectsOfTypeAll<TMP_FontAsset>();
 
-                var thinOrig = allFonts.FirstOrDefault(x => x.name == "Noto-Thin SDF");
-                var thinKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Light SDF");
+                TMP_FontAsset thinOrig = allFonts.First(x => x.name == "Noto-Light SDF" || x.name == "Noto-Thin SDF");
+                TMP_FontAsset thinKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Light SDF");
                 thinOrig.fallbackFontAssetTable.Add(thinKorean);
 
-                var regularOrig = allFonts.FirstOrDefault(x => x.name == "Noto-Regular SDF");
-                var regularKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Regular SDF");
+                TMP_FontAsset regularOrig = allFonts.First(x => x.name == "Noto-Regular SDF");
+                TMP_FontAsset regularKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Regular SDF");
                 regularOrig.fallbackFontAssetTable.Add(regularKorean);
 
-                var boldOrig = allFonts.FirstOrDefault(x => x.name == "Noto-Bold SDF");
-                var boldKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Bold SDF");
+                TMP_FontAsset boldOrig = allFonts.First(x => x.name == "Noto-Bold SDF");
+                TMP_FontAsset boldKorean = fontBundle.LoadAsset<TMP_FontAsset>("SourceHanSansK-Bold SDF");
                 boldOrig.fallbackFontAssetTable.Add(boldKorean);
 
-                var liberationSans = allFonts.FirstOrDefault(x => x.name == "LiberationSans SDF");
+                TMP_FontAsset liberationSans = allFonts.First(x => x.name == "LiberationSans SDF");
                 liberationSans.fallbackFontAssetTable.Add(regularKorean);
             }
             catch (Exception ex)
