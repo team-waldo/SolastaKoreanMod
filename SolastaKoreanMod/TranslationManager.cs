@@ -79,29 +79,23 @@ namespace SolastaKoreanMod
             }
 
             var languageSourceData = LocalizationManager.Sources[0];
-            languageSourceData.AddLanguage("한국어", "ko");
+            // languageSourceData.AddLanguage("한국어", "ko");
 
-            int languageIndex = languageSourceData.GetLanguageIndex("한국어");
+            int languageIndex = languageSourceData.GetLanguageIndexFromCode("en");
             int translated = 0;
-            int removed = 0;
 
-            foreach (var item in translationData.Strings)
+            foreach (TermData termData in languageSourceData.mTerms)
             {
-                var term = languageSourceData.GetTermData(item.Key);
-                if (term != null)
+                if (translationData.Strings.TryGetValue(termData.Term, out string tr))
                 {
-                    term.Languages[languageIndex] = item.Value;
-                    translated++;
-                }
-                else
-                {
-                    removed++;
+                    termData.Languages[languageIndex] = tr;
+                    translationData.Strings.Remove(termData.Term);
                 }
             }
 
             int total = languageSourceData.mTerms.Count;
             Log($"Translated ({translated}/{total})");
-            Log($"{removed} terms removed");
+            Log($"{translationData.Strings.Count} terms removed");
 
             Log("Added Korean language.");
             TranslationLoaded = true;
@@ -190,40 +184,40 @@ namespace SolastaKoreanMod
             }
         }
 
-        [HarmonyPatch(typeof(GameManager), "BindServiceSettings")]
-        internal static class GameManager_BindServiceSettings_Patch
-        {
-            public static void Prefix(Dictionary<string, string> ___languageByCode)
-            {
-                if (___languageByCode != null && Instance.TranslationLoaded)
-                    if (!___languageByCode.ContainsKey(LANGUAGE_CODE))
-                        ___languageByCode.Add(LANGUAGE_CODE, LANGUAGE_NAME);
-            }
-        }
+        //[HarmonyPatch(typeof(GameManager), "BindServiceSettings")]
+        //internal static class GameManager_BindServiceSettings_Patch
+        //{
+        //    public static void Prefix(Dictionary<string, string> ___languageByCode)
+        //    {
+        //        if (___languageByCode != null && Instance.TranslationLoaded)
+        //            if (!___languageByCode.ContainsKey(LANGUAGE_CODE))
+        //                ___languageByCode.Add(LANGUAGE_CODE, LANGUAGE_NAME);
+        //    }
+        //}
 
-        [HarmonyPatch(typeof(SettingDropListItem), "Bind")]
-        internal static class SettingDropListItem_Bind_Patch
-        {
-            public static void Postfix(
-                SettingTypeDropListAttribute ___settingTypeDropListAttribute,
-                GuiDropdown ___dropList)
-            {
-                if (___settingTypeDropListAttribute?.Name != "TextLanguage") return;
-                if (!Instance.TranslationLoaded) return;
+        //[HarmonyPatch(typeof(SettingDropListItem), "Bind")]
+        //internal static class SettingDropListItem_Bind_Patch
+        //{
+        //    public static void Postfix(
+        //        SettingTypeDropListAttribute ___settingTypeDropListAttribute,
+        //        GuiDropdown ___dropList)
+        //    {
+        //        if (___settingTypeDropListAttribute?.Name != "TextLanguage") return;
+        //        if (!Instance.TranslationLoaded) return;
 
-                int top = ___settingTypeDropListAttribute.Items.Count();
-                string[] items = new string[top + 1];
-                Array.Copy(___settingTypeDropListAttribute.Items, items, top);
-                items[top] = LANGUAGE_CODE;
+        //        int top = ___settingTypeDropListAttribute.Items.Count();
+        //        string[] items = new string[top + 1];
+        //        Array.Copy(___settingTypeDropListAttribute.Items, items, top);
+        //        items[top] = LANGUAGE_CODE;
 
-                ___settingTypeDropListAttribute.Items = items;
-                ___dropList.options.Add(new GuiDropdown.OptionDataAdvanced
-                {
-                    text = LANGUAGE_NAME,
-                    TooltipContent = LANGUAGE_NAME,
-                });
+        //        ___settingTypeDropListAttribute.Items = items;
+        //        ___dropList.options.Add(new GuiDropdown.OptionDataAdvanced
+        //        {
+        //            text = LANGUAGE_NAME,
+        //            TooltipContent = LANGUAGE_NAME,
+        //        });
 
-            }
-        }
+        //    }
+        //}
     }
 }
